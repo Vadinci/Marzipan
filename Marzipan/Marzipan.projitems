@@ -12,6 +12,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)MZP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Engine.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\EngineUtil\EngineProperties.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Component.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Core\" />
