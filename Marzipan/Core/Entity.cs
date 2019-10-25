@@ -24,11 +24,12 @@ namespace Marzipan.Core
 			int cc = components.Count;
 			for (int ii = 0; ii < cc; ii++) {
 				//TODO what if a new component is added here?
-				components[ii].Added();
+				//TODO wrong function call
+				components[ii].Added(this);
 			}
 		}
 
-		public void Update() {
+		public virtual void Update() {
 			int cc = components.Count;
 			for (int ii = 0; ii < cc; ii++) {
 				//TODO what if a new component is added here?
@@ -82,6 +83,7 @@ namespace Marzipan.Core
 
 		public void Add(Component component) {
 			components.Add(component);
+			component.Added(this);
 		}
 
 		public void Remove(Component component) {

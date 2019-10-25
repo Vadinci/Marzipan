@@ -3,12 +3,14 @@ namespace Marzipan.Core
 {
 	public class Component
 	{
+		public Entity entity { get; private set; }
+
 		public Component() {
 
 		}
 
-		public virtual void Added() {
-			//OVERRIDE this
+		public virtual void Added(Entity entity_) {
+			entity = entity_;
 		}
 
 		public virtual void Update() {

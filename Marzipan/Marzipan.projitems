@@ -15,9 +15,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Component.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Input.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MathUtil\Matrix2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Core\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\EngineUtil\" />
+    <Folder Include="$(MSBuildThisFileDirectory)MathUtil\" />
   </ItemGroup>
  </Project>

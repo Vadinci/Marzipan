@@ -90,7 +90,8 @@ namespace Marzipan.Core
 		protected override void Draw(GameTime gameTime) {
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			spriteBatch.Begin();
+			spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, null, null);
+
 			//TODO add scenes in between engine and entities (and then probably also add another layer in between engine and scenes?)
 			foreach (Entity e in entities) {
 				e.Draw();
