@@ -14,8 +14,18 @@ namespace Marzipan.Core
 		public bool active = true;
 		public bool visible = true;
 
-		public Entity() {
+		//higher priority gets updated first
+		//TODO priority should optional (can be toggled per scene). For some games, the, depth is stable enough. However, in games where depth constantly changes (e.g. with Z-sorting), the update
+		//order can change per frame, and lead to tricky gameplay situations
+		public float priority;
+		//higher depth gets rendered first (so appears on the background)
+		public float depth;
 
+		private Transform _transform;
+		public Transform transform { get => _transform; }
+
+		public Entity() {
+			_transform = new Transform();
 		}
 
 		//TODO check Monocle's 'awake' function. Also do similar things for when the scene awakes/sleeps?
@@ -81,9 +91,16 @@ namespace Marzipan.Core
 			}
 		}
 
-		public void Add(Component component) {
+		public Component Add(Component component) {
 			components.Add(component);
 			component.Added(this);
+			return component;
+		}
+
+		public T Add<T>(T component) where T : Component {
+			components.Add(component);
+			component.Added(this);
+			return component;
 		}
 
 		public void Remove(Component component) {

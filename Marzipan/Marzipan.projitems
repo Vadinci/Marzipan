@@ -17,10 +17,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Core\Component.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Input.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MathUtil\Matrix2D.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\InternalLists\EntityList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\InternalLists\SceneList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Transform.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Core\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\EngineUtil\" />
     <Folder Include="$(MSBuildThisFileDirectory)MathUtil\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Core\InternalLists\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)README.md" />
   </ItemGroup>
  </Project>

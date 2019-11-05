@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using Marzipan.Core.EngineUtil;
+using Marzipan.Core.InternalLists;
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,7 +15,7 @@ namespace Marzipan.Core
 		private GraphicsDeviceManager graphics;
 		public SpriteBatch spriteBatch;
 
-		public List<Entity> entities = new List<Entity>();
+		public SceneList scenes { get; private set; }
 
 		public Action OnBegin;
 
@@ -22,6 +25,8 @@ namespace Marzipan.Core
 
 			//TODO figure out what this does exactly
 			Content.RootDirectory = "Content";
+
+			scenes = new SceneList();
 		}
 
 		public void SetUp(EngineProperties properties) {
@@ -79,10 +84,9 @@ namespace Marzipan.Core
 			}
 			*/
 
-			//TODO add scenes in between engine and entities (and then probably also add another layer in between there)
-			foreach (Entity e in entities) {
-				e.Update();
-			}
+			MZP.Input.Update();
+
+			scenes.Update();
 
 			base.Update(gameTime);
 		}
@@ -92,10 +96,10 @@ namespace Marzipan.Core
 
 			spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, null, null);
 
-			//TODO add scenes in between engine and entities (and then probably also add another layer in between engine and scenes?)
-			foreach (Entity e in entities) {
-				e.Draw();
-			}
+			scenes.Draw();
+
+			//TODO drawDebug
+
 			spriteBatch.End();
 
 			base.Draw(gameTime);
