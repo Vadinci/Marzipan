@@ -1,39 +1,51 @@
 ﻿using System;
 using Marzipan.Core.InternalLists;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Marzipan.Core
 {
 	public class Scene
 	{
-		public string name = "Scene";
+		public string Name = "Scene";
 
-		private EntityList _entities;
-		public EntityList Entities {
-			get => _entities;
-		}
+		public Vector2 Offset = Vector2.Zero;
+
+		public EntityList Entities {get; private set;}
+		public RendererList Renderers {get; private set; }
 
 		public Scene() {
-			_entities = new EntityList();
+			Entities = new EntityList();
+			Renderers = new RendererList(this);
 		}
 
 		public virtual void Update() {
-			_entities.Update();
+			Renderers.Update();
+			Entities.Update();
 		}
 
 		public virtual void Draw() {
-			_entities.Draw();
-		}
-
-		public virtual void DrawDebug() {
-			_entities.DrawDebug();
+			Renderers.Render();
 		}
 
 		public bool Add(Entity e) {
-			return _entities.Add(e);
+			if (e.Scene != null) {
+				//TODO log error
+				return false;
+			}
+			e.Scene = this;
+			return Entities.Add(e);
 		}
 
 		public bool Remove(Entity e) {
-			return _entities.Remove(e);
+			if (e.Scene != this) {
+				//TODO log error
+				return false;
+			}
+			e.Scene = null;
+			return Entities.Remove(e);
 		}
+
+		//TODO a bunch of clever ways to get entities
 	}
 }

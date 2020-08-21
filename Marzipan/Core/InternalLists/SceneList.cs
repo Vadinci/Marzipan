@@ -1,69 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//TODO function to get a scene by name
+
 namespace Marzipan.Core.InternalLists
 {
 	public class SceneList
 	{
-		public List<Scene> _scenes;
+		private readonly List<Scene> scenes;
 
-		public HashSet<Scene> _adding;
-		public HashSet<Scene> _removing;
+		private readonly HashSet<Scene> adding;
+		private readonly HashSet<Scene> removing;
 
 		public SceneList() {
-			_scenes = new List<Scene>();
+			scenes = new List<Scene>();
 
-			_adding = new HashSet<Scene>();
-			_removing = new HashSet<Scene>();
+			adding = new HashSet<Scene>();
+			removing = new HashSet<Scene>();
 		}
 
 		public bool Add(Scene s) {
-			if (_scenes.Contains(s) || _adding.Contains(s)) return false;
-			_adding.Add(s);
+			if (scenes.Contains(s) || adding.Contains(s)) return false;
+			adding.Add(s);
 			return true;
 		}
 
 		public bool Remove(Scene s) {
-			if (!_scenes.Contains(s) || _removing.Contains(s)) return false;
-			_removing.Add(s);
+			if (!scenes.Contains(s) || removing.Contains(s)) return false;
+			removing.Add(s);
 			return true;
 		}
 
 		//TODO functions to change the order of scenes (add before/after/front/back, move before/after, etc. Don't want to do active sorting and whatnot as there are usually only a few active scenes)
 
 		public void UpdateLists() {
-			if (_adding.Count != 0) {
-				foreach (Scene s in _adding) {
-					_scenes.Add(s);
+			if (adding.Count != 0) {
+				foreach (Scene s in adding) {
+					scenes.Add(s);
 				}
-				_adding.Clear();
+				adding.Clear();
 			}
 
-			if (_removing.Count != 0) {
-				foreach (Scene s in _removing) {
-					_scenes.Remove(s);
+			if (removing.Count != 0) {
+				foreach (Scene s in removing) {
+					scenes.Remove(s);
 				}
-				_removing.Clear();
+				removing.Clear();
 			}
 		}
 
 		public void Update() {
 			UpdateLists();
 
-			foreach (Scene s in _scenes) {
+			foreach (Scene s in scenes) {
 				s.Update();
 			}
 		}
 
 		public void Draw() {
-			foreach (Scene s in _scenes) {
+			foreach (Scene s in scenes) {
 				s.Draw();
-			}
-		}
-
-		public void DrawDebug() {
-			foreach (Scene s in _scenes) {
-				s.DrawDebug();
 			}
 		}
 	}

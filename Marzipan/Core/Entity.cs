@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Marzipan.Core
 {
@@ -7,110 +8,113 @@ namespace Marzipan.Core
 	{
 		//TODO is the seperate ComponentList of Monocle interesting to replicate?
 		//Would allow things along the lines of entity.components.get<>() rather than entity.getComponent<>()
-		public List<Component> components = new List<Component>();  //TODO should this be public?
+		public List<Component> Components = new List<Component>();  
 
-		public List<String> tags = new List<string>();
+		public List<String> Tags = new List<string>();
 
-		public bool active = true;
-		public bool visible = true;
+		public bool Active = true;
+		public bool Visible = true;
 
 		//higher priority gets updated first
 		//TODO priority should optional (can be toggled per scene). For some games, the, depth is stable enough. However, in games where depth constantly changes (e.g. with Z-sorting), the update
 		//order can change per frame, and lead to tricky gameplay situations
-		public float priority;
+		public float Priority;
 		//higher depth gets rendered first (so appears on the background)
-		public float depth;
+		public float Depth;
 
-		private Transform _transform;
-		public Transform transform { get => _transform; }
+		public Vector2 Position;
+
+		
+		public Scene Scene { get; internal set; }
 
 		public Entity() {
-			_transform = new Transform();
+			
 		}
 
 		//TODO check Monocle's 'awake' function. Also do similar things for when the scene awakes/sleeps?
 
 		public void Added() {
-			int cc = components.Count;
+			int cc = Components.Count;
 			for (int ii = 0; ii < cc; ii++) {
 				//TODO what if a new component is added here?
 				//TODO wrong function call
-				components[ii].Added(this);
+				Components[ii].Added(this);
 			}
 		}
 
 		public virtual void Update() {
-			int cc = components.Count;
+			int cc = Components.Count;
 			for (int ii = 0; ii < cc; ii++) {
 				//TODO what if a new component is added here?
-				components[ii].Update();
+				Components[ii].Update();
 			}
 		}
 
 		public void Draw() {
-			int cc = components.Count;
+			int cc = Components.Count;
 			for (int ii = 0; ii < cc; ii++) {
-				//TODO what if a new component is added here?
-				components[ii].PreDraw();
+				Components[ii].PreDraw();
 			}
 
 			for (int ii = 0; ii < cc; ii++) {
-				//TODO what if a new component is added here?
-				components[ii].Draw();
+				Components[ii].Draw();
 			}
 
 			for (int ii = cc - 1; ii >= 0; ii--) {
-				//TODO what if a new component is added here?
-				components[ii].PostDraw();
+				Components[ii].PostDraw();
 			}
 		}
 
 		public void DrawDebug() {
-			int cc = components.Count;
+			int cc = Components.Count;
 			for (int ii = 0; ii < cc; ii++) {
-				//TODO what if a new component is added here?
-				components[ii].PreDraw();
+				Components[ii].PreDraw();
 			}
 
 			for (int ii = 0; ii < cc; ii++) {
-				//TODO what if a new component is added here?
-				components[ii].DrawDebug();
+				Components[ii].DrawDebug();
 			}
 
 			for (int ii = cc - 1; ii >= 0; ii--) {
-				//TODO what if a new component is added here?
-				components[ii].PostDraw();
+				Components[ii].PostDraw();
 			}
 		}
 
 		public void Removed() {
-			int cc = components.Count;
+			int cc = Components.Count;
 			for (int ii = 0; ii < cc; ii++) {
 				//TODO what if a new component is added here?
-				components[ii].Removed();
+				Components[ii].Removed();
 			}
 		}
 
 		public Component Add(Component component) {
-			components.Add(component);
+			Components.Add(component);
 			component.Added(this);
 			return component;
 		}
 
 		public T Add<T>(T component) where T : Component {
-			components.Add(component);
+			Components.Add(component);
+			component.Added(this);
+			return component;
+		}
+
+		public T Add<T>() where T : Component, new() {
+			T component = new T();
+			Components.Add(component);
 			component.Added(this);
 			return component;
 		}
 
 		public void Remove(Component component) {
-			components.Remove(component);
+			Components.Remove(component);
 		}
 
 		public T Get<T>() where T : Component {
-			int cc = components.Count;
+			int cc = Components.Count;
 			for (int ii = 0; ii < cc; ii++) {
-				if (components[ii] is T) return components[ii] as T;
+				if (Components[ii] is T) return Components[ii] as T;
 			}
 			return null;
 		}

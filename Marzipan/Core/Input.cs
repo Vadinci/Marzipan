@@ -17,25 +17,19 @@ namespace Marzipan.Core
 
 	public class Input
 	{
-		public KeyboardInput keyboard { get; private set; }
-		public TouchInput touch { get; private set; }
+		public static KeyboardInput Keyboard { get; private set; }
 
-		private List<IInput> _inputs;
+		private static List<IInput> inputs;
 
-		public Input() {
-			_inputs = new List<IInput>();
+		public static void Initialize() {
+			inputs = new List<IInput>();
 
-			keyboard = new KeyboardInput();
-			_inputs.Add(keyboard);
-
-			touch = new TouchInput();
-			if (TouchPanel.GetCapabilities().IsConnected) {
-				_inputs.Add(touch);
-			}
+			Keyboard = new KeyboardInput();
+			inputs.Add(Keyboard);
 		}
 
-		public void Update() {
-			foreach (IInput input in _inputs) {
+		public static void Update() {
+			foreach (IInput input in inputs) {
 				input.Update();
 			}
 		}
@@ -44,65 +38,32 @@ namespace Marzipan.Core
 
 	public class KeyboardInput : IInput
 	{
-		private KeyboardState _prevState;
-		private KeyboardState _currentState;
+		private KeyboardState prevState;
+		private KeyboardState currentState;
 
 		public KeyboardInput() {
-			_currentState = Keyboard.GetState();
-			_prevState = _currentState;
+			currentState = Keyboard.GetState();
+			prevState = currentState;
 		}
 
 		public void Update() {
-			_prevState = _currentState;
-			_currentState = Keyboard.GetState();
+			prevState = currentState;
+			currentState = Keyboard.GetState();
 		}
 
 		public bool Pressed(Keys key) {
-			return _prevState.IsKeyUp(key) && _currentState.IsKeyDown(key);
+			return prevState.IsKeyUp(key) && currentState.IsKeyDown(key);
 		}
 
 		public bool Check(Keys key) {
-			return _currentState.IsKeyDown(key);
+			return currentState.IsKeyDown(key);
 		}
 
 		public bool Released(Keys key) {
-			return _prevState.IsKeyDown(key) && _currentState.IsKeyUp(key);
+			return prevState.IsKeyDown(key) && currentState.IsKeyUp(key);
 		}
 	}
 
 	//TODO mouse
-
-	//TODO touch (needs much more)
-	public class TouchInput : IInput
-	{
-		private TouchCollection _currentState;
-		private List<int> _idList = new List<int>();
-
-		public void Update() {
-			_idList.Clear();
-
-			if (TouchPanel.GetCapabilities().IsConnected) {
-				_currentState = TouchPanel.GetState();
-			} else {
-				_currentState = new TouchCollection();
-			}
-		}
-
-		public List<int> GetTouchIds() {
-			if (_currentState.Count != _idList.Count) {
-				foreach (TouchLocation t in _currentState) {
-					_idList.Add(t.Id);
-				}
-			}
-			return _idList;
-		}
-
-		public TouchLocation GetTouch(int id) {
-			foreach (TouchLocation t in _currentState) {
-				if (t.Id == id) return t;
-			}
-			//TouchLocation is not nullable, so we return an invalid one
-			return new TouchLocation(id, TouchLocationState.Invalid, Vector2.Zero);
-		}
-	}
+	//TODO controllers
 }

@@ -1,39 +1,47 @@
 ﻿using System;
 namespace Marzipan.Core
 {
-	public class Component
+	public abstract class Component
 	{
-		public Entity entity { get; private set; }
+		public Entity Parent { get; private set; }
 
-		public Component() {
-
+		public Component()
+		{
+			
 		}
 
-		public virtual void Added(Entity entity_) {
-			entity = entity_;
+		public virtual void Added(Entity parent)
+		{
+			Parent = parent;
 		}
 
-		public virtual void Update() {
+		public virtual void Update()
+		{
 			//OVERRIDE this
 		}
 
-		public virtual void PreDraw() {
+		public virtual void PreDraw()
+		{
 			//OVERRIDE this
 		}
 
-		public virtual void Draw() {
+		public virtual void Draw()
+		{
 			//OVERRIDE this
 		}
 
-		public virtual void PostDraw() {
+		public virtual void PostDraw()
+		{
 			//OVERRIDE this
 		}
 
-		public virtual void DrawDebug() {
+		public virtual void DrawDebug()
+		{
 			//OVERRIDE this
 		}
 
-		public virtual void Removed() {
+		public virtual void Removed()
+		{
 			//OVERRIDE this
 		}
 	}

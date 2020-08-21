@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Marzipan.Core.EngineUtil;
 using Marzipan.Core.InternalLists;
 
 using Microsoft.Xna.Framework;
@@ -12,49 +11,63 @@ namespace Marzipan.Core
 {
 	public class Engine : Game
 	{
-		private GraphicsDeviceManager graphics;
-		public SpriteBatch spriteBatch;
+		public static Engine Instance { get; private set; }
 
-		public SceneList scenes { get; private set; }
+		private GraphicsDeviceManager Graphics;
+
+		public static SceneList Scenes { get; private set; }
 
 		public Action OnBegin;
 
-		public Engine() {
+		public static int Width { get; private set; }
+		public static int Height { get; private set; }
+		public static int ViewWidth { get; private set; }
+		public static int ViewHeight { get; private set; }
+
+		public static Color ClearColor = Color.CornflowerBlue;
+
+		public static Viewport Viewport { get; private set; }
+		public static Matrix ScreenMatrix;
+
+
+		public Engine(int width, int height, int windowWidth, int windowHeight, string title, bool fullScreen)
+		{
+			if (Instance != null)
+			{
+				throw new Exception("Engine instance already created!");
+			}
+			Instance = this;
+
 			//TODO figure out what this is exactly
-			graphics = new GraphicsDeviceManager(this);
+			Graphics = new GraphicsDeviceManager(this);
 
 			//TODO figure out what this does exactly
 			Content.RootDirectory = "Content";
 
-			scenes = new SceneList();
-		}
+			Scenes = new SceneList();
 
-		public void SetUp(EngineProperties properties) {
-			//TODO platform stuff
-			int defWidth = 800;
-			int defHeight = 480;
+			Width = width;
+			Height = height;
 
-			if (properties.fullScreen) {
-				defWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-				defHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-			}
-
-			graphics.PreferredBackBufferWidth = properties.width != 0 ? properties.width : defWidth;
-			graphics.PreferredBackBufferHeight = properties.height != 0 ? properties.height : defHeight;
-			graphics.IsFullScreen = properties.fullScreen;
-
-#if MOBILE
-			graphics.SupportedOrientations = properties.supportedOrientations != 0 ? properties.supportedOrientations : DisplayOrientation.Portrait;
-#endif
+			//TODO improve similar to Monocles set up per device
+			Graphics.PreferredBackBufferWidth = windowWidth;
+			Graphics.PreferredBackBufferHeight = windowHeight;
+			Graphics.IsFullScreen = fullScreen;
 		}
 
 		protected override void Initialize() {
 			base.Initialize();
+
+			Input.Initialize();
 		}
 
 		protected override void LoadContent() {
 			base.LoadContent();
-			spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			//TODO check Monocle to figure out the graphiscdevice event handlers, and see when this _should_ be called
+			UpdateView();
+
+			Marzipan.Graphics.GraphicsUtils.Initialize(GraphicsDevice);
 
 			if (OnBegin != null) OnBegin.Invoke();
 		}
@@ -75,38 +88,78 @@ namespace Marzipan.Core
 		}
 
 		protected override void Update(GameTime gameTime) {
-			/*
+
 			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) {
 				//TODO can't be used on all platforms,
 				//needs conditional compilation
 				this.Exit();
 				return;
 			}
-			*/
 
-			MZP.Input.Update();
-
-			scenes.Update();
+			Input.Update();
+			UpdateCore(gameTime);
 
 			base.Update(gameTime);
 		}
 
+		//override for custom gameloop
+		protected virtual void UpdateCore(GameTime gameTime) {
+			Scenes.Update();
+		}
+
+
 		protected override void Draw(GameTime gameTime) {
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(ClearColor);
 
-			spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, RasterizerState.CullNone, null, null);
-
-			scenes.Draw();
-
-			//TODO drawDebug
-
-			spriteBatch.End();
+			DrawCore(gameTime);
 
 			base.Draw(gameTime);
 
 			//TODO can we figure out the draw calls? for graphing?
 			//Nice IMGUI thingy :+1:
 			//GraphicsDevice.Metrics
+		}
+
+		protected virtual void DrawCore(GameTime gameTime) {
+			Scenes.Draw();
+		}
+
+
+		private void UpdateView()
+		{
+			float screenWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+			float screenHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+
+			// get View Size
+			if (screenWidth / Width > screenHeight / Height)
+			{
+				ViewWidth = (int)(screenHeight / Height * Width);
+				ViewHeight = (int)screenHeight;
+			}
+			else
+			{
+				ViewWidth = (int)screenWidth;
+				ViewHeight = (int)(screenWidth / Width * Height);
+			}
+
+			// apply View Padding
+			var aspect = ViewHeight / (float)ViewWidth;
+			//ViewWidth -= ViewPadding * 2;
+			//ViewHeight -= (int)(aspect * ViewPadding * 2);
+
+			// update screen matrix
+			ScreenMatrix = Matrix.CreateScale(ViewWidth / (float)Width);
+
+			// update viewport
+			Viewport = new Viewport
+			{
+				X = (int)(screenWidth / 2 - ViewWidth / 2),
+				Y = (int)(screenHeight / 2 - ViewHeight / 2),
+				Width = ViewWidth,
+				Height = ViewHeight,
+				MinDepth = 0,
+				MaxDepth = 1
+			};
 		}
 	}
 }

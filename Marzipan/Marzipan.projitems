@@ -9,23 +9,30 @@
     <Import_RootNamespace>Marzipan</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)MZP.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Engine.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\EngineUtil\EngineProperties.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Scene.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Entity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Component.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\Input.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MathUtil\Matrix2D.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\InternalLists\EntityList.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\InternalLists\SceneList.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Core\Transform.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\GraphicsUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\Renderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Renderers\BasicRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\Camera.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\InternalLists\RendererList.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\GraphicsComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\Graphics\Image.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Graphics\GTexture.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Core\" />
-    <Folder Include="$(MSBuildThisFileDirectory)Core\EngineUtil\" />
-    <Folder Include="$(MSBuildThisFileDirectory)MathUtil\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Math\" />
     <Folder Include="$(MSBuildThisFileDirectory)Core\InternalLists\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Graphics\Renderers\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Components\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Components\Graphics\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)README.md" />
